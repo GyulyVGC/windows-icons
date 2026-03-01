@@ -13,26 +13,26 @@ use uwp_apps::{get_uwp_icon};
 use std::{error::Error, path::Path};
 
 
-fn is_uwp_app(path: &Path) -> bool {
-    let is_uwp = path.to_string_lossy().contains("Program Files\\WindowsApps");
+// fn is_uwp_app(path: &Path) -> bool {
+//     let is_uwp = path.to_string_lossy().contains("Program Files\\WindowsApps");
+// 
+//     let is_wsa = path
+//         .to_string_lossy()
+//         .contains("WindowsSubsystemForAndroid");
+// 
+//     is_uwp && !is_wsa
+// }
 
-    let is_wsa = path
-        .to_string_lossy()
-        .contains("WindowsSubsystemForAndroid");
-
-    is_uwp && !is_wsa
-}
-
-pub fn get_icon_by_path<P: AsRef<Path>>(path: P) -> Result<Vec<u8>, Box<dyn Error>> {
+pub fn get_icon_by_path<P: AsRef<Path>>(path: P) -> Result<(u32, u32, Vec<u8>), Box<dyn Error>> {
     let path = path.as_ref();
-    if is_uwp_app(path) {
-        println!("Detected UWP app for path: '{path:?}'");
-        get_uwp_icon(path)
-    } else {
+    // if is_uwp_app(path) {
+    //     println!("Detected UWP app for path: '{path:?}'");
+    //     get_uwp_icon(path)
+    // } else {
         get_hicon_to_image(path)
-    }
+    // }
 }
 
-pub fn get_icon_by_dll(dll_icon: DllIcon) -> Result<Vec<u8>, Box<dyn Error>> {
-    get_dll_hicon_to_image(dll_icon)
-}
+// pub fn get_icon_by_dll(dll_icon: DllIcon) -> Result<(u32, u32, Vec<u8>), Box<dyn Error>> {
+//     get_dll_hicon_to_image(dll_icon)
+// }

@@ -55,7 +55,7 @@ impl Drop for AutoIcon {
     }
 }
 
-pub fn get_hicon_to_image(file_path: &Path) -> Result<Vec<u8>, Box<dyn Error>> {
+pub fn get_hicon_to_image(file_path: &Path) -> Result<(u32, u32, Vec<u8>), Box<dyn Error>> {
     let hicon = unsafe { get_hicon(file_path) }?;
     unsafe { hicon_to_image(hicon) }
 }
@@ -87,7 +87,7 @@ unsafe fn get_hicon(file_path: &Path) -> Result<HICON, Box<dyn Error>> {
     Ok(shfileinfo.hIcon)
 }
 
-pub unsafe fn hicon_to_image(icon: HICON) -> Result<Vec<u8>, Box<dyn Error>> {
+pub unsafe fn hicon_to_image(icon: HICON) -> Result<(u32, u32, Vec<u8>), Box<dyn Error>> {
     let bitmap_size_i32 = i32::try_from(mem::size_of::<BITMAP>())?;
     let biheader_size_u32 = u32::try_from(mem::size_of::<BITMAPINFOHEADER>())?;
 
@@ -184,15 +184,15 @@ pub unsafe fn hicon_to_image(icon: HICON) -> Result<Vec<u8>, Box<dyn Error>> {
     };
 
     // BGRA -> RGBA
-    // let rgba_data = pixel_data
-    //     .chunks_exact(4)
-    //     .flat_map(|px| [px[2], px[1], px[0], px[3]])
-    //     .collect::<Vec<_>>();
+    let rgba_data = pixel_data
+        .chunks_exact(4)
+        .flat_map(|px| [px[2], px[1], px[0], px[3]])
+        .collect::<Vec<_>>();
+
+    Ok((width_u32, height_u32, rgba_data))
 
     // RgbaImage::from_raw(width_u32, height_u32, rgba_data)
     //     .ok_or_else(|| "the container(rgba_data) is not big enough".into())
-
-    Ok(pixel_data.into_vec())
 }
 
 fn read_icon_file(icon_path: &Path) -> Result<Vec<u8>, Box<dyn Error>> {
