@@ -188,8 +188,8 @@ pub unsafe fn hicon_to_image(icon: HICON) -> Result<Vec<u8>, Box<dyn Error>> {
         .chunks_exact(4)
         .flat_map(|px| [px[2], px[1], px[0], px[3]])
         .collect::<Vec<_>>();
-    
-    rgba_data
+
+    Ok(rgba_data)
 
     // RgbaImage::from_raw(width_u32, height_u32, rgba_data)
     //     .ok_or_else(|| "the container(rgba_data) is not big enough".into())

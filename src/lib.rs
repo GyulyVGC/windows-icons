@@ -7,13 +7,11 @@ mod uwp_apps;
 
 pub use dll_icons::DllIcon;
 use dll_icons::get_dll_hicon_to_image;
-use utils::image_utils::{get_hicon_to_image, image_to_base64};
-use utils::process_utils::get_process_path;
-use uwp_apps::{get_uwp_icon, get_uwp_icon_base64};
+use utils::image_utils::{get_hicon_to_image};
+use uwp_apps::{get_uwp_icon};
 
 use std::{error::Error, path::Path};
 
-use image::RgbaImage;
 
 fn is_uwp_app(path: &Path) -> bool {
     let is_uwp = path.to_string_lossy().contains("Program Files\\WindowsApps");
