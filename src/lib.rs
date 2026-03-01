@@ -6,20 +6,20 @@ mod dll_icons;
 mod uwp_apps;
 
 pub use dll_icons::DllIcon;
-use dll_icons::get_dll_hicon_to_image;
+// use dll_icons::get_dll_hicon_to_image;
 use utils::image_utils::{get_hicon_to_image};
-use uwp_apps::{get_uwp_icon};
+// use uwp_apps::{get_uwp_icon};
 
 use std::{error::Error, path::Path};
 
 
 // fn is_uwp_app(path: &Path) -> bool {
 //     let is_uwp = path.to_string_lossy().contains("Program Files\\WindowsApps");
-// 
+//
 //     let is_wsa = path
 //         .to_string_lossy()
 //         .contains("WindowsSubsystemForAndroid");
-// 
+//
 //     is_uwp && !is_wsa
 // }
 

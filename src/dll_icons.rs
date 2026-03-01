@@ -109,10 +109,10 @@ fn MAKEINTRESOURCEW(id: i32) -> PCWSTR {
     unsafe { std::mem::transmute::<_, PCWSTR>(id as usize) }
 }
 
-pub fn get_dll_hicon_to_image(dll_icon: DllIcon) -> Result<Vec<u8>, Box<dyn Error>> {
-    let hicon = unsafe { get_dll_hicon(dll_icon) }?;
-    unsafe { hicon_to_image(hicon) }
-}
+// pub fn get_dll_hicon_to_image(dll_icon: DllIcon) -> Result<Vec<u8>, Box<dyn Error>> {
+//     let hicon = unsafe { get_dll_hicon(dll_icon) }?;
+//     unsafe { hicon_to_image(hicon) }
+// }
 
 unsafe fn get_hicon_handle(
     dll_name: &HSTRING,
