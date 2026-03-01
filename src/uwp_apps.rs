@@ -9,9 +9,9 @@ use std::{
 use glob::glob;
 use image::RgbaImage;
 
-use crate::utils::image_utils::{icon_file_to_base64, icon_file_to_image};
+use crate::utils::image_utils::{icon_file_to_image};
 
-pub fn get_uwp_icon(file_path: &Path) -> Result<RgbaImage, Box<dyn Error>> {
+pub fn get_uwp_icon(file_path: &Path) -> Result<Vec<u8>, Box<dyn Error>> {
     let icon_path = get_icon_file_path(file_path)?;
     let rgba_image = icon_file_to_image(&icon_path).map_err(|e| {
         io::Error::new(
@@ -20,17 +20,6 @@ pub fn get_uwp_icon(file_path: &Path) -> Result<RgbaImage, Box<dyn Error>> {
         )
     })?;
     Ok(rgba_image)
-}
-
-pub fn get_uwp_icon_base64(file_path: &Path) -> Result<String, Box<dyn Error>> {
-    let icon_path = get_icon_file_path(file_path)?;
-    let base64 = icon_file_to_base64(&icon_path).map_err(|e| {
-        io::Error::new(
-            ErrorKind::Other,
-            format!("Failed to get icon base64 for path: '{file_path:?}'\n{e}"),
-        )
-    })?;
-    Ok(base64)
 }
 
 fn get_icon_file_path(app_path: &Path) -> Result<PathBuf, Box<dyn Error>> {

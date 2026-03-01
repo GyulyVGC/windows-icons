@@ -55,7 +55,7 @@ impl Drop for AutoIcon {
     }
 }
 
-pub fn get_hicon_to_image(file_path: &Path) -> Result<RgbaImage, Box<dyn Error>> {
+pub fn get_hicon_to_image(file_path: &Path) -> Result<Vec<u8>, Box<dyn Error>> {
     let hicon = unsafe { get_hicon(file_path) }?;
     unsafe { hicon_to_image(hicon) }
 }
@@ -87,7 +87,7 @@ unsafe fn get_hicon(file_path: &Path) -> Result<HICON, Box<dyn Error>> {
     Ok(shfileinfo.hIcon)
 }
 
-pub unsafe fn hicon_to_image(icon: HICON) -> Result<RgbaImage, Box<dyn Error>> {
+pub unsafe fn hicon_to_image(icon: HICON) -> Result<Vec<u8>, Box<dyn Error>> {
     let bitmap_size_i32 = i32::try_from(mem::size_of::<BITMAP>())?;
     let biheader_size_u32 = u32::try_from(mem::size_of::<BITMAPINFOHEADER>())?;
 
@@ -188,9 +188,11 @@ pub unsafe fn hicon_to_image(icon: HICON) -> Result<RgbaImage, Box<dyn Error>> {
         .chunks_exact(4)
         .flat_map(|px| [px[2], px[1], px[0], px[3]])
         .collect::<Vec<_>>();
+    
+    rgba_data
 
-    RgbaImage::from_raw(width_u32, height_u32, rgba_data)
-        .ok_or_else(|| "the container(rgba_data) is not big enough".into())
+    // RgbaImage::from_raw(width_u32, height_u32, rgba_data)
+    //     .ok_or_else(|| "the container(rgba_data) is not big enough".into())
 }
 
 fn read_icon_file(icon_path: &Path) -> Result<Vec<u8>, Box<dyn Error>> {
@@ -200,23 +202,9 @@ fn read_icon_file(icon_path: &Path) -> Result<Vec<u8>, Box<dyn Error>> {
     Ok(buffer)
 }
 
-pub fn icon_file_to_image(icon_path: &Path) -> Result<RgbaImage, Box<dyn Error>> {
+pub fn icon_file_to_image(icon_path: &Path) -> Result<Vec<u8>, Box<dyn Error>> {
     let buffer = read_icon_file(icon_path)?;
-    let image = image::load_from_memory(&buffer)
-        .map_err(|e| io::Error::new(ErrorKind::Other, format!("Image decode failed: {e}")))?;
-    Ok(image.to_rgba8())
-}
-
-pub fn icon_file_to_base64(icon_path: &Path) -> Result<String, Box<dyn Error>> {
-    let buffer = read_icon_file(icon_path)?;
-    Ok(general_purpose::STANDARD.encode(&buffer))
-}
-
-pub fn image_to_base64(img: RgbaImage) -> Result<String, Box<dyn Error>> {
-    let mut buffer = Vec::with_capacity(1024 * 50);
-    img.write_to(
-        &mut std::io::Cursor::new(&mut buffer),
-        image::ImageFormat::Png,
-    )?;
-    Ok(general_purpose::STANDARD.encode(buffer))
+    // let image = image::load_from_memory(&buffer)
+    //     .map_err(|e| io::Error::new(ErrorKind::Other, format!("Image decode failed: {e}")))?;
+    Ok(buffer)
 }
