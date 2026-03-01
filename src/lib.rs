@@ -16,7 +16,7 @@ use std::{error::Error, path::Path};
 use image::RgbaImage;
 
 fn is_uwp_app(path: &Path) -> bool {
-    let is_uwp = path.to_string_lossy().contains("Program Files/WindowsApps");
+    let is_uwp = path.to_string_lossy().contains("Program Files\\WindowsApps");
 
     let is_wsa = path
         .to_string_lossy()
