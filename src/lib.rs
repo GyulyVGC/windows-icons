@@ -28,6 +28,7 @@ fn is_uwp_app(path: &Path) -> bool {
 pub fn get_icon_by_path<P: AsRef<Path>>(path: P) -> Result<RgbaImage, Box<dyn Error>> {
     let path = path.as_ref();
     if is_uwp_app(path) {
+        println!("Detected UWP app for path: '{path:?}'");
         get_uwp_icon(path)
     } else {
         get_hicon_to_image(path)
